@@ -288,6 +288,7 @@ import com.lilithsthrone.world.places.AbstractPlaceType;
 import com.lilithsthrone.world.places.GenericPlace;
 import com.lilithsthrone.world.places.PlaceType;
 import com.lilithsthrone.world.places.PlaceUpgrade;
+import com.phred.addin.GameCharacterJPB;
 
 /**
  * The class for all the game's characters. I think this is the biggest class in the game.
@@ -307,9 +308,9 @@ public abstract class GameCharacter implements XMLSaving {
 	public static final int MAX_TRAITS = 6;
 	public static final int MAX_COMBAT_MOVES = 8;
 	public static final int DEFAULT_COMBAT_AP = 3;
-
-	public static final int MINIMUM_AGE = 18;
-	
+	//JPB start
+	public static final int MINIMUM_AGE = 11;
+	//JPB end
 	public static final int DEFAULT_TIME_START_VALUE = -1;
 	
 	// Core variables:
@@ -9639,6 +9640,19 @@ public abstract class GameCharacter implements XMLSaving {
 		}
 	}
 	
+	// JPB start
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "GameCharacter=" + getName();
+	}
+	
+	private GameCharacterJPB gcUtil=new GameCharacterJPB();	
+	//JPB end
 	/**
 	 * @return A <b>formatted</b> piece of speech, reacting to any current penetration.
 	 */
@@ -9756,8 +9770,16 @@ public abstract class GameCharacter implements XMLSaving {
 			} else {
 				s = getDirtyTalkNoPenetration(Main.sex.getTargetedPartner(this), isPlayerDom);
 			}
+			// JPB start
+			String newS = gcUtil.getNewDirtyTalk(this); //jpb
+			// " ([npc.name] - [npc.girl] [npc.penis+] ! [npc2.name] - [npc2.girl] [npc2.penis+])"
+			String newS2 = UtilText.parse(this, target, "[npc.speech("+newS+")]"); 
+			System.out.println("Chosen finshed line="+newS2);
 			
-			return s;
+//			return UtilText.parseSpeech(s + "<br>" + newS, this);
+			return s + "<br>" + newS2;
+			// JPB end
+//			return s;
 		}
 	}
 	
