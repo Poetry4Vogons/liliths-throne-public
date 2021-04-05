@@ -84,7 +84,7 @@ import com.lilithsthrone.utils.colours.BaseColour;
 import com.lilithsthrone.utils.colours.PresetColour;
 import com.lilithsthrone.utils.comparators.ClothingZLayerComparator;
 import com.lilithsthrone.world.Cell;
-//import com.phred.addin.GameCharacterJPB;
+import com.phred.addin.GameCharacterJPB;
 
 /**
  * Singleton enforced by Enum Call initialiseCombat() before using.
@@ -888,7 +888,7 @@ public class Sex {
 		
 		//JPB start
 		setWasVirgin();
-		//GameCharacterJPB.checkTalkRefresh();
+		GameCharacterJPB.checkTalkRefresh();
 		//JPB end
 		return SEX_DIALOGUE;
 	}
