@@ -86,6 +86,7 @@ import com.lilithsthrone.utils.colours.BaseColour;
 import com.lilithsthrone.utils.colours.PresetColour;
 import com.lilithsthrone.utils.comparators.ClothingZLayerComparator;
 import com.lilithsthrone.world.Cell;
+import com.phred.addin.GameCharacterJPB;
 
 /**
  * Singleton enforced by Enum Call initialiseCombat() before using.
@@ -270,6 +271,55 @@ public class Sex {
 	private Map<GameCharacter, Map<InventorySlot, AbstractWeapon>> weaponsPreSexMap;
 	
 	private boolean sexFinished;
+	//jpb start 
+	private Map<GameCharacter, Map<String,Boolean>> wasVirginMap;
+	public boolean wasVirgin(GameCharacter gc, SexAreaInterface area) {
+		String areaName = "";
+		boolean rc = false;
+		if (area instanceof SexAreaOrifice) {
+			SexAreaOrifice orifice = (SexAreaOrifice) area;
+			areaName = orifice.name();
+		} else if (area instanceof SexAreaPenetration) {
+			SexAreaPenetration pen = (SexAreaPenetration) area;
+			areaName = pen.name();
+		}
+		//System.out.println("Checking wasVirgin " + gc.toString() + " " + areaName);
+		if (wasVirginMap == null) {
+		//	System.out.println("in wasVirgin, wasVirginMap is null");
+			rc = false;
+		} else {
+			Map<String, Boolean> gcMap = wasVirginMap.get(gc);
+			if (gcMap == null) {
+			//	System.out.println("in wasVirgin, gcMap is null");
+				rc = false;
+			} else {
+				Boolean x = gcMap.get(areaName);
+				rc = (x != null && x);
+			}
+		}
+		System.out.println("Found wasVirgin " + gc.toString() + " " + areaName + " " + rc);
+		return rc;
+	}
+	private  void setWasVirgin() {
+		wasVirginMap = new HashMap<>();
+		Map<String,Boolean> gcMap;
+		for(GameCharacter character : Main.sex.getAllParticipants()) {
+//			System.out.println("Start setting wasVirgin "+character.toString());
+			gcMap=new HashMap<>();		
+			if (character.isAssVirgin()) {
+				gcMap.put(SexAreaOrifice.ANUS.name(), true);
+			}
+			if (character.hasVagina() && character.isVaginaVirgin()) {
+				gcMap.put(SexAreaOrifice.VAGINA.name(), true);
+			}
+			if (character.hasPenis() && character.isPenisVirgin()) {
+				gcMap.put(SexAreaPenetration.PENIS.name(), true);
+			}
+			if (!gcMap.isEmpty()) wasVirginMap.put(character, gcMap);
+			System.out.println("Setting wasVirgin "+character.toString()+" "+gcMap);
+		}
+	}
+	//JPB end 
 	
 	private AbstractClothing selectedClothing;
 	
@@ -846,6 +896,10 @@ public class Sex {
 		
 		sexInitFinished = true;
 		
+		//JPB start
+		setWasVirgin();
+		GameCharacterJPB.checkTalkRefresh();
+		//JPB end
 		return SEX_DIALOGUE;
 	}
 	

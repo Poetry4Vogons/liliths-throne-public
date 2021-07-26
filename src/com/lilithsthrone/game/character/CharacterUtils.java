@@ -1844,6 +1844,16 @@ public class CharacterUtils {
 				character.setAgeAppearanceDifferenceToAppearAsAge(18+Util.random.nextInt(9));
 			}
 		}
+		//JPB start
+		if (((character.getAge() == AgeCategory.TWEENS_EARLY || character.getAge() == AgeCategory.TEENS_EARLY)
+				&& Math.random() > 0.40f)
+				|| ((character.getAge() == AgeCategory.TEENS_MIDDLE || character.getAge() == AgeCategory.TEENS_LATE)
+						&& Math.random() > 0.60f)) {
+			character.setPetName(Main.game.getPlayer().getId(), "Daddy");
+			character.addFetish(Fetish.FETISH_INCEST);
+			character.addPersonalityTrait(PersonalityTrait.INNOCENT);
+		}
+		//JPB end
 		
 		// Piercings (in order of probability that they'll have them, based on some random website that orders popularity):
 		// All piercings are reliant on having ear piercings first:
@@ -1878,7 +1888,15 @@ public class CharacterUtils {
 		if(character.hasFetish(Fetish.FETISH_ANAL_RECEIVING) || character.getHistory()==Occupation.NPC_PROSTITUTE) {
 			character.setAssVirgin(false);
 			character.setAssCapacity(character.getAssRawCapacityValue()*1.2f, true);
-			
+		//JPB start
+		} else if (character.getAge()==AgeCategory.TEENS_LATE||character.getAge()==AgeCategory.TEENS_MIDDLE){
+			int capacity = (int) (Capacity.ZERO_IMPENETRABLE.getMinimumValue() + Util.random.nextInt((int) (Capacity.TWO_TIGHT.getMaximumValue(false)-Capacity.ZERO_IMPENETRABLE.getMinimumValue())));
+			character.setAssCapacity(capacity, true);
+			character.setAssVirgin(true);
+		} else if (character.getAge()==AgeCategory.TEENS_EARLY||character.getAge()==AgeCategory.TWEENS_EARLY){
+			int capacity = (int) (Capacity.ZERO_IMPENETRABLE.getMinimumValue() + Util.random.nextInt((int) (Capacity.TWO_TIGHT.getMaximumValue(false)-Capacity.ZERO_IMPENETRABLE.getMinimumValue())));character.setAssCapacity(capacity, true);
+			character.setAssVirgin(true);
+		//JPB end	
 		} else {
 			character.setAssVirgin(true);
 		}
@@ -2068,7 +2086,14 @@ public class CharacterUtils {
 				}
 				int capacity = Util.random.nextInt((int) (Capacity.TWO_TIGHT.getMaximumValue(false)));
 				character.setVaginaCapacity(capacity, true);
-				
+			// JPB start
+			} else if (character.getAge()==AgeCategory.TEENS_LATE||character.getAge()==AgeCategory.TEENS_MIDDLE){
+				int capacity = (int) (Capacity.ZERO_IMPENETRABLE.getMinimumValue() + Util.random.nextInt((int) (Capacity.TWO_TIGHT.getMaximumValue(false)-Capacity.ZERO_IMPENETRABLE.getMinimumValue())));
+				character.setVaginaCapacity(capacity, true);
+			} else if (character.getAge()==AgeCategory.TEENS_EARLY||character.getAge()==AgeCategory.TWEENS_EARLY){
+				int capacity = (int) (Capacity.ZERO_IMPENETRABLE.getMinimumValue() + Util.random.nextInt((int) (Capacity.ONE_EXTREMELY_TIGHT.getMaximumValue(false)-Capacity.ZERO_IMPENETRABLE.getMinimumValue())));
+				character.setVaginaCapacity(capacity, true);
+			// JPB end
 			} else {
 				double random = Math.random();
 				float chanceToBeDeflowered = character.hasFetish(Fetish.FETISH_PURE_VIRGIN)
